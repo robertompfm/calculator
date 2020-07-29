@@ -193,10 +193,12 @@ a:focus {
     display: flex;
     justify-content: right;
     align-items: flex-end;
+    overflow: hidden;
 }
 
 .display__top p {
     padding: 0 1.5rem .2rem 0;
+    display: inline;
 }
 
 .display__bottom {
@@ -208,10 +210,12 @@ a:focus {
     display: flex;
     justify-content: right;
     align-items: flex-start;
+    overflow: hidden;
 }
 
 .display__bottom p {
     padding: 1rem;
+    display: inline;
 }
 
 /* BUTTONS */
@@ -236,9 +240,11 @@ a:focus {
     cursor: pointer;
     box-shadow: 0 .2rem 0 .3rem rgb(40, 40, 40),
                 inset 0rem -.3rem .5rem .4rem rgba(0, 0, 0, .4);
+    transition: all .1s;
 }
 
-.btn:active {
+.btn:active,
+.btn--press {
     padding: 0;
     border: none;
     box-shadow: 0 .1rem 0 .3rem rgb(40, 40, 40),

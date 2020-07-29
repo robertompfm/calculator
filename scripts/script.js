@@ -3,6 +3,24 @@ let accumulatorStr = '';
 let currentNumberStr = '';
 let currentOperatorStr = '';
 
+
+// CONSTANTS
+const doubleOButton = document.querySelector('#btn--00');  // 00 button
+const dotButton = document.querySelector('#btn--dot');  // dot button
+const delButton = document.querySelector('#btn--del');  // del button
+const operatorButons = {
+    '/': document.querySelector('#btn--div'),
+    '*': document.querySelector('#btn--times'),
+    '-': document.querySelector('#btn--minus'),
+    '+': document.querySelector('#btn--plus'),
+};  // operators (/, *, -, +)
+const digitButtons = {};
+for (let i = 0; i < 10; i++) {
+    digitButtons[i] = document.querySelector(`#btn--${i}`);
+};  // digits (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+const equalsBtn = document.querySelector('#btn--equals');  // = button
+const acBtn = document.querySelector('#btn--ac');  // AC button
+
 const KEY_CODES = {
     96: 0, 97: 1, 98: 2, 99: 3, 100: 4, 
     101: 5, 102: 6, 103: 7, 104: 8, 105: 9, 
@@ -22,6 +40,7 @@ const OPERATORS_DISPLAY_STR = {
     '': ''
 }
 
+const ERROR_MESSAGE = 'ERROR!';
 
 // OPERATOR FUNCTIONS
 function add(num1, num2) {
@@ -37,13 +56,13 @@ function multiply(num1, num2) {
 }
 
 function divide(num1, num2) {
-    if (num2 === 0) return 'ERROR!';
+    if (num2 === 0) return NaN;
     return num1 / num2;
 }
 
 // OPERATE FUNCTION
 function operate(operator, num1, num2) {
-    console.log({operator, num1, num2});
+    console.log({operator, num1, num2}); // REMOVE THIS LINE!!!!!!!
     switch (operator) {
         case '+':
             return add(num1, num2);
@@ -87,6 +106,22 @@ function setExpressionBottom(expression) {
     displayBottom.textContent = expression;
 }
 
+// UPDATE OPERATOR
+function updateCurrentOperatorStr(newOperator) {
+    if (accumulatorStr !== ERROR_MESSAGE) {
+        currentOperatorStr = newOperator
+    }
+}
+
+// UPDATE THE TOP DISPLAY EXPRESSION
+function updateTopDisplay() {
+    setExpressionTop(
+        accumulatorStr + 
+        OPERATORS_DISPLAY_STR[currentOperatorStr] + 
+        currentNumberStr
+        );
+}
+
 
 // UPDATE THE BOTTOM DISPLAY EXPRESSION
 function updateBottomDisplay() {
@@ -99,7 +134,8 @@ function updateBottomDisplay() {
 
 // UPDATE CURRENT NUMBER STRING
 function addCharToCurrentNumberStr(char) {
-    if (accumulatorStr !== '' && currentOperatorStr === '') {
+    if ((accumulatorStr !== '' && currentOperatorStr === '') ||
+        accumulatorStr === ERROR_MESSAGE) {
         accumulatorStr = '';
     }
     currentNumberStr = currentNumberStr + char;
@@ -126,10 +162,26 @@ function removeLastNumber() {
 
 // COMPUTE RESULT
 function computeResult() {
+    // if the number was jus a dot or a minus sign, 
+    // it will be treated as a zero
+    if (currentNumberStr === '.' || currentNumberStr === '-') {
+        currentNumberStr = '0';
+    }
     let accumulator = Number(accumulatorStr);
     let operator = currentOperatorStr;
     let number = Number(currentNumberStr);
+    // if there is a current operator,
+    // the expression on the top of the screen is updated
+    if (currentOperatorStr !== '') {
+        updateTopDisplay();
+    }
     accumulator = operate(operator, accumulator, number);
+    if (Number.isNaN(accumulator)) {
+        accumulatorStr = ERROR_MESSAGE;
+        currentOperatorStr = '';
+        currentNumberStr = '';
+        return;
+    }
     accumulatorStr = accumulator.toString();
     currentOperatorStr = '';
     currentNumberStr = '';
@@ -138,8 +190,18 @@ function computeResult() {
 
 // CHANGE OPERATOR
 function selectOperator(newOperator) {
+    if (accumulatorStr === ERROR_MESSAGE) {
+        return;
+    }
+    if ((currentOperatorStr === '*' ||
+        currentOperatorStr === '/') && 
+        (newOperator == '-' &&
+        currentNumberStr === '')) {
+        addNewNumber('-');
+        return;
+    }
     computeResult();
-    currentOperatorStr = newOperator;
+    updateCurrentOperatorStr(newOperator);
     updateBottomDisplay();
 }
 
@@ -171,98 +233,96 @@ function selectEquals() {
 }
 
 
-
-function updateLastExpression() {
-    if (operator === '' && current === '') {
-        lastExpression = 0;
-    } else if (operator === '') {
-        lastExpression = current;
-    } else {
-        lastExpression = accumulator + operator + current
-    }
-}
-
-
 // CLEAR ALL FUNCTION
 function clear() {
     setExpressionTop('');
     setExpressionBottom('');
 
-    accumulator = 0;
-    current = 0;
+    accumulatorStr = '';
+    currentNumberStr = '';
+    currentOperatorStr = '';
 }
 
 
-// BUTTON CLICK EVENTS
-//   Number click function
+// KEY PRESS HANDLER
+function typeKey(e) {
+    let key = KEY_CODES[e.keyCode];
+    if (typeof key === 'number') {
+        digitButtons[key].classList.add('btn--press');
+        digitButtons[key].click();
+        return;
+    }
+    switch (key) {
+        case 'BACKSPACE':
+            delButton.classList.add('btn--press');
+            delButton.click();
+            return;
+        case '.':
+            dotButton.classList.add('btn--press');
+            dotButton.click();
+            return;    
+        case '+':
+        case '-': 
+        case '*': 
+        case '/':
+            operatorButons[key].classList.add('btn--press');
+            operatorButons[key].click();
+            return;
+        case '=':
+            equalsBtn.classList.add('btn--press');
+            equalsBtn.click();
+            return;
+        default:
+            return;
+    }    
+}
+
+
+// BUTTON CLICK HANDLERS
 function clickNumber(e) {
     addNewNumber(e.target.textContent);
 }
-//   Operator click function
+
 function clickOperator(e) {
     selectOperator(e.target.textContent);
 }
-//   0 to 9 listeners
-for (let i = 0; i < 10; i++) {
-    let numberButton = document.querySelector(`#btn--${i}`);
-    numberButton.addEventListener('click', clickNumber);
+
+
+// REMOVE TRANSICTION FUNCTION
+function removeTransition(e) {
+    if (e.propertyName != 'transform') return;
+    this.classList.remove('btn--press');
 }
-//   00 listener
-const doubleOButton = document.querySelector('#btn--00');
+
+// CLICK EVENT LISTENERS
+for (const btn in digitButtons) {
+    digitButtons[btn].addEventListener('click', clickNumber);
+}
 doubleOButton.addEventListener('click', clickNumber);
-//   Dot listener
-const dotButton = document.querySelector('#btn--dot');
 dotButton.addEventListener('click', clickNumber);
-//   Del button (same as backspace) listeners
-const delButton = document.querySelector('#btn--del');
 delButton.addEventListener('click', removeLastNumber);
-//   Operator buttons
-const operatorButons = [
-    document.querySelector('#btn--div'),
-    document.querySelector('#btn--times'),
-    document.querySelector('#btn--minus'),
-    document.querySelector('#btn--plus'),
-];
-operatorButons.forEach(btn => btn.addEventListener('click', clickOperatorBtn));
-//   Equals button
-const equalsBtn = document.querySelector('#btn--equals');
-equalsBtn.addEventListener('click', selectEquals);
-
-// KEY PRESS HANDLERS
-//   Keydown listeners
-window.addEventListener('keydown', typeKey);
-//   Typing function
-function typeKey(e) {
-    let key = KEY_CODES[e.keyCode];
-    if (key === undefined) {
-        return;
-    }
-    
-    if (key === 'BACKSPACE') {
-        removeLastNumber();
-        return;
-    }
-
-    if (typeof key === 'number') {
-        addNewNumber(key);
-        return;
-    }
-
-    if (key === '.') {
-        writeCharOnDisplayBottom(key);
-        return;
-    }
-
-    if (key === '+' || 
-        key === '-' || 
-        key === '*' || 
-        key === '/') {
-        selectOperator(key);
-        return;
-    }
+for (const btn in operatorButons) {
+    operatorButons[btn].addEventListener('click', clickOperatorBtn);
 }
+equalsBtn.addEventListener('click', selectEquals);
+acBtn.addEventListener('click', clear);
 
 
+// KEY PRESS LISTENERS
+window.addEventListener('keydown', typeKey);
+
+// TRANSICTION LISTENERS
+for (const btn in digitButtons) {
+    digitButtons[btn].addEventListener('transitionend',removeTransition);
+}
+doubleOButton.addEventListener('transitionend',removeTransition);
+dotButton.addEventListener('transitionend',removeTransition);
+delButton.addEventListener('transitionend',removeTransition);
+for (const btn in operatorButons) {
+    operatorButons[btn].addEventListener('transitionend',removeTransition);
+}
+equalsBtn.addEventListener('transitionend',removeTransition);
+acBtn.addEventListener('transitionend',removeTransition);
 
 
 
