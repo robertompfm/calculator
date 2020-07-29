@@ -1,0 +1,378 @@
+/* FONTS */
+/* font-family: 'Orbitron', sans-serif;
+
+font-family: 'Press Start 2P', cursive;
+
+font-family: 'Roboto', sans-serif; */ 
+
+
+/* GENERAL SETTINGS */
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+*:focus {
+    outline: none;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    box-sizing: border-box;
+}
+
+a,
+a:visited,
+a:focus {
+    text-decoration: none;
+}
+
+/* BACKGROUND */
+.background {
+    background-attachment: fixed;
+    background-image: linear-gradient(
+        185deg,  
+        rgb(148, 83, 40), 
+        rgb(92, 66, 49)
+        );
+}
+
+/* CALCULATOR FRAME */
+.frame {
+    width: 40rem;
+    height: 55rem;
+    background: transparent;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 2rem;
+    box-shadow: -.1rem 1rem 1rem black;
+    overflow: hidden;
+}
+
+.frame__top {
+    height: 35%;
+    width: 100%;
+    background: black;
+    background-image: linear-gradient(
+        185deg, 
+        rgb(60, 60, 60),
+        rgb(20, 20, 20)
+        );
+    border-radius: 2rem 2rem 0 0;
+    /* box-shadow: inset -.2rem .3rem 1rem 0rem rgba(163, 163, 163, 0.8); */
+    box-shadow: inset 0rem 2.5rem 1rem -1.5rem rgba(30, 30, 30, 1),
+                inset 2.5rem 0rem 1.5rem -1.5rem rgba(0, 0, 0, 0.8),
+                inset -2.5rem 0rem 1.5rem -1.5rem rgba(0, 0, 0, 0.8);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.frame__bottom {
+    height: 65%;
+    width: 100%;
+    background: grey;
+    background-image: linear-gradient(
+        185deg,
+        rgb(140, 140, 140),
+        rgb(110, 110, 110)
+        );
+    border-radius: 0 0 2rem 2rem;
+    box-shadow: inset -.2rem -1.2rem 2rem .7rem rgba(20, 20, 20, 0.9);        
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.frame__left {
+    height: 34rem;
+    width: 5%;
+    background: grey;
+    border-right: solid 1px rgb(50, 50, 50);
+    border-bottom: solid 1px rgb(50, 50, 50);
+    border-top: solid 1px rgb(50, 50, 50);
+    background-image: linear-gradient(
+        185deg,
+        rgb(140, 140, 140),
+        rgb(110, 110, 110)
+        );
+    box-shadow: inset 1rem 0rem 1.5rem 0rem rgba(40, 40, 40, 0.9);        
+    z-index: 2;
+    position: absolute;
+    bottom: 3rem;
+    left: 0;
+    border-radius: 0 2rem 2rem 0;
+}
+
+.frame__right {
+    height: 34rem;
+    width: 5%;
+    background: grey;
+    border-left: solid 1px rgb(50, 50, 50);
+    border-bottom: solid 1px rgb(50, 50, 50);
+    border-top: solid 1px rgb(50, 50, 50);
+    background-image: linear-gradient(
+        185deg,
+        rgb(140, 140, 140),
+        rgb(110, 110, 110)
+        );
+    box-shadow: inset -1rem 0rem 1.5rem 0rem rgba(40, 40, 40, 0.9);        
+    z-index: 2;
+    position: absolute;
+    bottom: 3rem;
+    right: 0;
+    border-radius: 2rem 0 0 2rem;   
+}
+
+
+/* HEADER */
+.header {
+    /* border: solid 1px white; */
+    width: 85%;
+    height: 20%;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+
+.title {
+    font-family: 'Teko', sans-serif;
+    font-size: 2.2rem;
+    color: rgb(200, 200, 200);
+}
+
+.author,
+.author:visited {
+    font-family: 'Teko', sans-serif;
+    font-size: 1.8rem;
+    color: transparent;
+    text-shadow: 0 0 .03rem white;
+}
+
+
+/* DISPLAY */
+.display {
+    width: 85%;
+    height: 50%;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: .4rem;
+    background-color: #e2f7e8;
+    background-image: linear-gradient(
+        185deg,
+        #e2f7e8,
+        #bdd2c3
+        );
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-family: 'Roboto', sans-serif;
+    color: rgba(0, 0, 0, .85);
+}
+
+.display__top {
+    /* border: solid 1px; */
+    width: 100%;
+    height: 35%;
+    text-align: right;
+    font-size: 1.8rem;
+    display: flex;
+    justify-content: right;
+    align-items: flex-end;
+}
+
+.display__top p {
+    padding: 0 1.5rem .2rem 0;
+}
+
+.display__bottom {
+    /* border: solid 1px; */
+    width: 100%;
+    height: 65%;
+    text-align: right;
+    font-size: 3rem;
+    display: flex;
+    justify-content: right;
+    align-items: flex-start;
+}
+
+.display__bottom p {
+    padding: 1rem;
+}
+
+/* BUTTONS */
+.buttons {
+    /* border: solid 1px white; */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: grid;
+    grid-template-rows: repeat(5, 4.5rem);
+    grid-template-columns: repeat(4, 6.5rem);
+    gap: 1.5rem 1.8rem;
+    transform: translate(-50%, -55%);
+}
+
+.btn {
+    font-family: 'Roboto', sans-serif;
+    font-size: 2rem;
+    border: none;
+    border-radius: .5rem;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 .2rem 0 .3rem rgb(40, 40, 40),
+                inset 0rem -.3rem .5rem .4rem rgba(0, 0, 0, .4);
+}
+
+.btn:active {
+    padding: 0;
+    border: none;
+    box-shadow: 0 .1rem 0 .3rem rgb(40, 40, 40),
+                inset 0rem -.3rem .5rem .4rem rgba(0, 0, 0, .45);
+    transform: translateY(.1rem);
+}
+
+.btn:focus {
+    outline: none;
+}
+
+.btn--light {
+    color: black;
+    background-image: linear-gradient(
+        185deg,
+        rgb(190, 190, 190),
+        rgb(210, 210, 210)
+        );
+}
+
+.btn--dark {
+    color: white;
+    background-image: linear-gradient(
+        185deg,
+        rgb(110, 110, 110),
+        rgb(90, 90, 90)
+        );
+}
+
+.btn--red {
+    color: white;
+    background-image: linear-gradient(
+        185deg,
+        rgb(250, 30, 30),
+        rgb(240, 30, 30)
+        );
+}
+
+#btn--ac {
+    grid-row: 1;
+    grid-column: 1;
+}
+
+#btn--del {
+    grid-row: 1;
+    grid-column: 2;
+}
+
+#btn--1 {
+    grid-row: 2;
+    grid-column: 1;
+}
+
+#btn--2 {
+    grid-row: 2;
+    grid-column: 2;
+}
+
+#btn--3 {
+    grid-row: 2;
+    grid-column: 3;
+}
+
+#btn--div {
+    grid-row: 1;
+    grid-column: 3;
+}
+
+#btn--times {
+    grid-row: 1;
+    grid-column: 4;
+}
+
+#btn--4 {
+    grid-row: 3;
+    grid-column: 1;
+}
+
+#btn--5 {
+    grid-row: 3;
+    grid-column: 2;
+}
+
+#btn--6 {
+    grid-row: 3;
+    grid-column: 3;
+}
+
+#btn--minus {
+    grid-row: 2;
+    grid-column: 4;
+}
+
+#btn--7 {
+    grid-row: 4;
+    grid-column: 1;
+}
+
+#btn--8 {
+    grid-row: 4;
+    grid-column: 2;
+}
+
+#btn--9 {
+    grid-row: 4;
+    grid-column: 3;
+}
+
+
+#btn--plus {
+    grid-row: 3;
+    grid-column: 4;
+}
+
+#btn--00 {
+    grid-row: 5;
+    grid-column: 1;
+}
+
+#btn--0 {
+    grid-row: 5;
+    grid-column: 2;
+}
+
+#btn--dot {
+    grid-row: 5;
+    grid-column: 3;
+}
+
+#btn--equals {
+    grid-row: 4 / span 2;
+    grid-column: 4;
+}
+
+button > * {
+    pointer-events: none;
+  }
