@@ -62,7 +62,6 @@ function divide(num1, num2) {
 
 // OPERATE FUNCTION
 function operate(operator, num1, num2) {
-    console.log({operator, num1, num2}); // REMOVE THIS LINE!!!!!!!
     switch (operator) {
         case '+':
             return add(num1, num2);
@@ -134,6 +133,11 @@ function updateBottomDisplay() {
 
 // UPDATE CURRENT NUMBER STRING
 function addCharToCurrentNumberStr(char) {
+    // prevent adding more than one dot
+    if (char === '.' && currentNumberStr.indexOf('.') !== -1) {
+        return;
+    }
+    // if there was an error the accumulatorStr is reset
     if ((accumulatorStr !== '' && currentOperatorStr === '') ||
         accumulatorStr === ERROR_MESSAGE) {
         accumulatorStr = '';
@@ -159,10 +163,14 @@ function removeLastNumber() {
     updateBottomDisplay();
 }
 
+// ROUND 6 DIGITS
+function roundNineDigits(num) {
+    return Math.round(num * (10 ** 9)) / (10 ** 9);
+}
 
 // COMPUTE RESULT
 function computeResult() {
-    // if the number was jus a dot or a minus sign, 
+    // if the number is just a dot or a minus sign, 
     // it will be treated as a zero
     if (currentNumberStr === '.' || currentNumberStr === '-') {
         currentNumberStr = '0';
@@ -176,11 +184,25 @@ function computeResult() {
         updateTopDisplay();
     }
     accumulator = operate(operator, accumulator, number);
+    // if answer is not a number, it means an error occurred
     if (Number.isNaN(accumulator)) {
         accumulatorStr = ERROR_MESSAGE;
         currentOperatorStr = '';
         currentNumberStr = '';
         return;
+    }
+    // if answer is too big or too small,
+    // use scientific notation
+    if ((accumulator < -(10**8) || accumulator > (10**8)) ||
+        (accumulator < (10**-6) && accumulator > 0) ||
+        (accumulator > ((-10)**-6) && accumulator < 0)) {
+        
+        accumulator = accumulator.toExponential(9);
+    
+    } else {
+        
+        accumulator = roundNineDigits(accumulator);
+    
     }
     accumulatorStr = accumulator.toString();
     currentOperatorStr = '';
@@ -193,12 +215,17 @@ function selectOperator(newOperator) {
     if (accumulatorStr === ERROR_MESSAGE) {
         return;
     }
-    if ((currentOperatorStr === '*' ||
-        currentOperatorStr === '/') && 
-        (newOperator == '-' &&
-        currentNumberStr === '')) {
-        addNewNumber('-');
-        return;
+    // logic to make a negative number
+    // if new operator is minus sign and 
+    // the current number is not defined yet
+    if (newOperator === '-' && currentNumberStr === '') {
+        if (currentOperatorStr === '*' ||
+            currentOperatorStr === '/' ||
+            (currentOperatorStr === '' && accumulatorStr === '')) {
+            
+            addNewNumber('-');
+            return;
+        }
     }
     computeResult();
     updateCurrentOperatorStr(newOperator);

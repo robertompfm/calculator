@@ -65,7 +65,6 @@ a:focus {
         rgb(20, 20, 20)
         );
     border-radius: 2rem 2rem 0 0;
-    /* box-shadow: inset -.2rem .3rem 1rem 0rem rgba(163, 163, 163, 0.8); */
     box-shadow: inset 0rem 2.5rem 1rem -1.5rem rgba(30, 30, 30, 1),
                 inset 2.5rem 0rem 1.5rem -1.5rem rgba(0, 0, 0, 0.8),
                 inset -2.5rem 0rem 1.5rem -1.5rem rgba(0, 0, 0, 0.8);
@@ -133,7 +132,6 @@ a:focus {
 
 /* HEADER */
 .header {
-    /* border: solid 1px white; */
     width: 85%;
     height: 20%;
     position: absolute;
@@ -185,7 +183,6 @@ a:focus {
 }
 
 .display__top {
-    /* border: solid 1px; */
     width: 100%;
     height: 35%;
     text-align: right;
@@ -198,11 +195,10 @@ a:focus {
 
 .display__top p {
     padding: 0 1.5rem .2rem 0;
-    display: inline;
+    white-space: nowrap;
 }
 
 .display__bottom {
-    /* border: solid 1px; */
     width: 100%;
     height: 65%;
     text-align: right;
@@ -210,12 +206,13 @@ a:focus {
     display: flex;
     justify-content: right;
     align-items: flex-start;
+    flex-wrap: nowrap;
     overflow: hidden;
 }
 
 .display__bottom p {
+    white-space: nowrap;
     padding: 1rem;
-    display: inline;
 }
 
 /* BUTTONS */
