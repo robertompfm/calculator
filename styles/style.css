@@ -188,7 +188,7 @@ a:focus {
     text-align: right;
     font-size: 1.8rem;
     display: flex;
-    justify-content: right;
+    justify-content: flex-end;
     align-items: flex-end;
     overflow: hidden;
 }
@@ -204,7 +204,7 @@ a:focus {
     text-align: right;
     font-size: 3rem;
     display: flex;
-    justify-content: right;
+    justify-content: flex-end;
     align-items: flex-start;
     flex-wrap: nowrap;
     overflow: hidden;
